@@ -1,0 +1,31 @@
+def bash(String cmd) { sh("#/usr/bin/env bash\nset -euo pipefail\n${cmd}") }
+
+podTemplate(label: 'hyperkube-build',
+  containers: [containerTemplate(name: 'build', image: 'quay.io/coreos/hyperkube-builder:0.2', ttyEnabled: true, command: 'cat')],
+  volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
+) {
+  node('hyperkube-build') {
+    stage('checkout scm') {
+      dir('kube-jenkins-config') {
+        git url: 'https://github.com/coreos/kube-jenkins-config.git', branch: "${JENKINS_BRANCH}"
+      }
+    }
+    stage('checkout kubernetes') {
+      dir('kubernetes') {
+        git url: 'https://github.com/kubernetes/kubernetes.git'
+      }
+    }
+    container('build') {
+      withCredentials([sshUserPrivateKey(credentialsId: 'kube-jenkins-github', keyFileVariable: 'keyfile')]) {
+        dir('kubernetes') {
+          stage('build') {
+            bash '''
+               export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $keyfile"
+               ${WORKSPACE}/kube-jenkins-config/scripts/1-hyperkube-release.sh
+            '''
+          }
+        }
+      }
+    }
+  }
+}
