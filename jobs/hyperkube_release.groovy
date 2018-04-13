@@ -1,11 +1,6 @@
 // META
 repo = "coreos/kube-jenkins-config"
 
-// CONFIG
-org_whitelist = ['coreos', 'coreos-inc']
-job_admins = ['colemickens', 'ericchiang', 'rithujohn191', 'rphillips']
-user_whitelist = job_admins
-
 // JOBS
 job_name = "tku-2-release-hyperkube"
 
