@@ -19,7 +19,7 @@ if [ -n "${RB_EXISTS}" ]; then
 else
     echo "Creating release branch: ${RELEASE_BRANCH}"
     git checkout ${RELEASE_TAG} -b ${RELEASE_BRANCH}
-    if [ "${DRYRUN}" = false ]; then
+    if [ "${DRY_RUN}" = false ]; then
         git push coreos ${RELEASE_BRANCH}
     fi
 fi
@@ -31,7 +31,7 @@ if [ -n "${PATCHES_FROM}" ]; then
     git fetch coreos
     git -c "user.name=Jenkins Deploy" -c "user.email=jenkins@coreos.com" rebase coreos/${RELEASE_BRANCH} coreos/${PATCHES_FROM}
     git checkout -b ${PATCHSET_BRANCH}
-    if [ "${DRYRUN}" = false ]; then
+    if [ "${DRY_RUN}" = false ]; then
         git push coreos ${PATCHSET_BRANCH}
     fi
 
@@ -41,7 +41,7 @@ if [ -n "${PATCHES_FROM}" ]; then
     # export PATH=$PATH:$PWD/hub-linux-amd64-2.3.0-pre9/bin
 
     # open pull request
-    # if [ "${DRYRUN}" = false ]; then
+    # if [ "${DRY_RUN}" = false ]; then
     #    hub pull-request -b ${RELEASE_BRANCH} -h ${PATCHSET_BRANCH} -m "automated PR from 1-hyperkube-release"
     #    echo "pull request opened, merge and tag a release to start the build"
     #fi
