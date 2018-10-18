@@ -1,4 +1,4 @@
-def bash(String cmd) { sh("#/usr/bin/env bash\nset -euo pipefail\n${cmd}") }
+def bash(String cmd) { sh("#/usr/bin/env bash\nset -exuo pipefail\n${cmd}") }
 
 podTemplate(label: 'hyperkube-build',
   containers: [containerTemplate(name: 'build', image: 'quay.io/coreos/hyperkube-builder:0.2', ttyEnabled: true, command: 'cat')],
