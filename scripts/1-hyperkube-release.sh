@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -exuo pipefail
 
 echo "RELEASE_TAG=${RELEASE_TAG}"
 echo "PATCHES_FROM=${PATCHES_FROM}"
